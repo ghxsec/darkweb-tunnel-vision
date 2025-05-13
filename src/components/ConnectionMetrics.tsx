@@ -1,0 +1,59 @@
+
+import { cn } from "@/lib/utils";
+import { AreaChart } from "@/components/ui/chart"; 
+
+interface ConnectionMetricsProps {
+  className?: string;
+}
+
+export function ConnectionMetrics({ className }: ConnectionMetricsProps) {
+  // Sample data for the bandwidth chart
+  const chartData = [
+    { time: "14:00", value: 12 },
+    { time: "14:05", value: 18 },
+    { time: "14:10", value: 15 },
+    { time: "14:15", value: 25 },
+    { time: "14:20", value: 32 },
+    { time: "14:25", value: 22 },
+    { time: "14:30", value: 28 },
+    { time: "14:35", value: 30 },
+    { time: "14:40", value: 42 },
+    { time: "14:45", value: 35 },
+  ];
+  
+  return (
+    <div className={cn("glass-card p-6 rounded-xl", className)}>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-white">Connection Metrics</h2>
+        <div className="text-xs bg-vpn-purple/10 text-vpn-purple px-2 py-1 rounded">Live</div>
+      </div>
+      
+      <div className="grid grid-cols-3 gap-3 mb-4">
+        <div className="glass-card p-3 rounded-lg">
+          <div className="text-xs text-white/60">Download</div>
+          <div className="text-xl font-medium text-vpn-cyan">8.2 Mbps</div>
+        </div>
+        <div className="glass-card p-3 rounded-lg">
+          <div className="text-xs text-white/60">Upload</div>
+          <div className="text-xl font-medium text-vpn-purple">3.5 Mbps</div>
+        </div>
+        <div className="glass-card p-3 rounded-lg">
+          <div className="text-xs text-white/60">Ping</div>
+          <div className="text-xl font-medium text-white">42 ms</div>
+        </div>
+      </div>
+      
+      <div className="glass-card p-3 rounded-lg">
+        <div className="text-sm mb-2 text-white/80">Bandwidth Usage</div>
+        <AreaChart 
+          className="h-32 text-vpn-cyan"
+          data={chartData} 
+          categories={["value"]} 
+          index="time"
+          valueFormatter={(value: number) => `${value} Mbps`}
+          colors={["#0AFFFF"]}
+        />
+      </div>
+    </div>
+  );
+}
