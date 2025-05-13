@@ -1,6 +1,7 @@
 
 import { cn } from "@/lib/utils";
-import { AreaChart } from "@/components/ui/chart"; 
+import * as RechartsPrimitive from "recharts";
+import { ChartContainer } from "@/components/ui/chart"; 
 
 interface ConnectionMetricsProps {
   className?: string;
@@ -45,14 +46,53 @@ export function ConnectionMetrics({ className }: ConnectionMetricsProps) {
       
       <div className="glass-card p-3 rounded-lg">
         <div className="text-sm mb-2 text-white/80">Bandwidth Usage</div>
-        <AreaChart 
+        <ChartContainer 
           className="h-32 text-vpn-cyan"
-          data={chartData} 
-          categories={["value"]} 
-          index="time"
-          valueFormatter={(value: number) => `${value} Mbps`}
-          colors={["#0AFFFF"]}
-        />
+          config={{
+            value: { color: "#0AFFFF" }
+          }}
+        >
+          {(props) => (
+            <RechartsPrimitive.AreaChart data={chartData} {...props}>
+              <RechartsPrimitive.defs>
+                <RechartsPrimitive.linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                  <RechartsPrimitive.stop offset="5%" stopColor="#0AFFFF" stopOpacity={0.4} />
+                  <RechartsPrimitive.stop offset="95%" stopColor="#0AFFFF" stopOpacity={0} />
+                </RechartsPrimitive.linearGradient>
+              </RechartsPrimitive.defs>
+              <RechartsPrimitive.CartesianGrid stroke="rgba(255,255,255,0.1)" strokeDasharray="3 3" vertical={false} />
+              <RechartsPrimitive.XAxis 
+                dataKey="time" 
+                stroke="rgba(255,255,255,0.2)" 
+                tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 10 }} 
+              />
+              <RechartsPrimitive.YAxis 
+                stroke="rgba(255,255,255,0.2)" 
+                tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 10 }}
+                tickFormatter={(value) => `${value} Mbps`}
+              />
+              <RechartsPrimitive.Tooltip 
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="bg-background/90 border border-border p-2 rounded shadow-md">
+                        <p className="text-xs text-white">{`${label}: ${payload[0].value} Mbps`}</p>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <RechartsPrimitive.Area 
+                type="monotone" 
+                dataKey="value" 
+                stroke="#0AFFFF" 
+                strokeWidth={2}
+                fill="url(#colorValue)"
+              />
+            </RechartsPrimitive.AreaChart>
+          )}
+        </ChartContainer>
       </div>
     </div>
   );
