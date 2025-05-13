@@ -1,6 +1,6 @@
 
 import { cn } from "@/lib/utils";
-import * as RechartsPrimitive from "recharts";
+import * as RechartsOriginal from "recharts";
 import { ChartContainer } from "@/components/ui/chart"; 
 
 interface ConnectionMetricsProps {
@@ -52,26 +52,20 @@ export function ConnectionMetrics({ className }: ConnectionMetricsProps) {
             value: { color: "#0AFFFF" }
           }}
         >
-          {(props) => (
-            <RechartsPrimitive.AreaChart data={chartData} {...props}>
-              <RechartsPrimitive.defs>
-                <RechartsPrimitive.linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                  <RechartsPrimitive.stop offset="5%" stopColor="#0AFFFF" stopOpacity={0.4} />
-                  <RechartsPrimitive.stop offset="95%" stopColor="#0AFFFF" stopOpacity={0} />
-                </RechartsPrimitive.linearGradient>
-              </RechartsPrimitive.defs>
-              <RechartsPrimitive.CartesianGrid stroke="rgba(255,255,255,0.1)" strokeDasharray="3 3" vertical={false} />
-              <RechartsPrimitive.XAxis 
+          <RechartsOriginal.ResponsiveContainer width="100%" height="100%">
+            <RechartsOriginal.AreaChart data={chartData}>
+              <RechartsOriginal.CartesianGrid stroke="rgba(255,255,255,0.1)" strokeDasharray="3 3" vertical={false} />
+              <RechartsOriginal.XAxis 
                 dataKey="time" 
                 stroke="rgba(255,255,255,0.2)" 
                 tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 10 }} 
               />
-              <RechartsPrimitive.YAxis 
+              <RechartsOriginal.YAxis 
                 stroke="rgba(255,255,255,0.2)" 
                 tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 10 }}
                 tickFormatter={(value) => `${value} Mbps`}
               />
-              <RechartsPrimitive.Tooltip 
+              <RechartsOriginal.Tooltip 
                 content={({ active, payload, label }) => {
                   if (active && payload && payload.length) {
                     return (
@@ -83,15 +77,21 @@ export function ConnectionMetrics({ className }: ConnectionMetricsProps) {
                   return null;
                 }}
               />
-              <RechartsPrimitive.Area 
+              <RechartsOriginal.Area 
                 type="monotone" 
                 dataKey="value" 
                 stroke="#0AFFFF" 
                 strokeWidth={2}
                 fill="url(#colorValue)"
               />
-            </RechartsPrimitive.AreaChart>
-          )}
+              <RechartsOriginal.Defs>
+                <RechartsOriginal.LinearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                  <RechartsOriginal.Stop offset="5%" stopColor="#0AFFFF" stopOpacity={0.4} />
+                  <RechartsOriginal.Stop offset="95%" stopColor="#0AFFFF" stopOpacity={0} />
+                </RechartsOriginal.LinearGradient>
+              </RechartsOriginal.Defs>
+            </RechartsOriginal.AreaChart>
+          </RechartsOriginal.ResponsiveContainer>
         </ChartContainer>
       </div>
     </div>
